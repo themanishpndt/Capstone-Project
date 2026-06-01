@@ -2,8 +2,11 @@
 Contact Us Page class - Page Object Model
 """
 
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from src.pages.base_page import BasePage
 from src.locators.contact_locators import ContactLocators
+import time
 
 
 class ContactPage(BasePage):
@@ -52,14 +55,33 @@ class ContactPage(BasePage):
     
     def click_submit(self):
         """Click submit button"""
-        self.click_element(self.locators.SUBMIT_BUTTON)
-        self.logger.info("Clicked submit button")
+        try:
+            self.click_element(self.locators.SUBMIT_BUTTON)
+            self.logger.info("Clicked submit button")
+        except:
+            try:
+                self.click_element(self.locators.SUBMIT_BUTTON_ALT)
+                self.logger.info("Clicked submit button (alt)")
+            except:
+                # Try JavaScript to submit the form
+                try:
+                    self.driver.execute_script("document.getElementById('contact-us-form').submit();")
+                    self.logger.info("Submitted form via JavaScript")
+                except Exception as e:
+                    self.logger.error(f"Failed to submit form: {e}")
+                    raise
     
     def is_success_message_visible(self):
         """Check if success message is visible"""
-        is_visible = self.is_element_visible(self.locators.SUCCESS_MESSAGE)
-        self.logger.info(f"Success message visible: {is_visible}")
-        return is_visible
+        try:
+            # Check if the success message element is displayed
+            success_element = self.find_element(self.locators.SUCCESS_MESSAGE)
+            is_displayed = success_element.is_displayed()
+            self.logger.info(f"Success message visible: {is_displayed}")
+            return is_displayed
+        except Exception as e:
+            self.logger.warning(f"Success message not found: {e}")
+            return False
     
     def get_success_message_text(self):
         """Get success message text"""
@@ -93,3 +115,22 @@ class ContactPage(BasePage):
     def verify_message_error(self):
         """Verify message field error"""
         return self.is_element_visible(self.locators.MESSAGE_ERROR)
+    
+    def verify_get_in_touch_heading(self):
+        """Verify GET IN TOUCH heading is visible"""
+        is_visible = self.is_element_visible(self.locators.GET_IN_TOUCH_HEADING)
+        self.logger.info(f"GET IN TOUCH heading visible: {is_visible}")
+        return is_visible
+    
+    def handle_alert_popup(self):
+        """Handle OK button in alert popup after form submission"""
+        try:
+            wait = WebDriverWait(self.driver, 15)
+            alert = wait.until(EC.alert_is_present())
+            self.logger.info("Alert detected, clicking OK")
+            alert.accept()
+            self.logger.info("Alert accepted")
+            return True
+        except Exception as e:
+            self.logger.warning(f"No alert found or error handling alert: {e}")
+            return False
