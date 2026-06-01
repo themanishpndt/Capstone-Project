@@ -4,6 +4,10 @@ Review Page class - Page Object Model (Product Details with Reviews)
 
 import os
 
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
+
 from src.pages.base_page import BasePage
 from src.locators.review_locators import ReviewLocators
 
@@ -106,6 +110,19 @@ class ReviewPage(BasePage):
     
     def click_submit_review(self):
         """Click submit review button"""
+        self.wait.until(EC.visibility_of_element_located(self.locators.REVIEW_NAME_INPUT))
+        self.wait.until(EC.visibility_of_element_located(self.locators.REVIEW_EMAIL_INPUT))
+        self.wait.until(EC.visibility_of_element_located(self.locators.REVIEW_TEXTAREA))
+
+        try:
+            WebDriverWait(self.driver, 5).until(
+                lambda driver: driver.execute_script(
+                    "return document.readyState !== 'loading' && !!window.jQuery;"
+                )
+            )
+        except TimeoutException:
+            self.logger.warning("Review scripts were slow to report ready; submitting with visible form controls")
+
         self.click_element(self.locators.SUBMIT_REVIEW_BUTTON)
         self.logger.info("Clicked submit review button")
     

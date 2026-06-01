@@ -36,15 +36,15 @@ class ProductPage(BasePage):
         self.navigate_to(product_url)
         self.wait_for_url_contains("/product_details/")
 
-    def add_first_product_to_cart(self, view_cart=False):
-        """Add the first visible product to the cart."""
+    def add_product_to_cart(self, index=0, view_cart=False):
+        """Add a visible product to the cart."""
         buttons = self.find_elements(self.locators.ADD_TO_CART_BUTTONS)
         visible_buttons = [button for button in buttons if button.is_displayed()]
-        if not visible_buttons:
-            raise AssertionError("No visible add-to-cart buttons found")
+        if index >= len(visible_buttons):
+            raise AssertionError(f"No visible add-to-cart button found at index {index}")
 
-        self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", visible_buttons[0])
-        self.driver.execute_script("arguments[0].click();", visible_buttons[0])
+        self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", visible_buttons[index])
+        self.driver.execute_script("arguments[0].click();", visible_buttons[index])
         if self.is_element_visible(self.locators.CART_MODAL):
             modal_action = (
                 self.locators.CART_MODAL_VIEW_CART_LINK
@@ -52,6 +52,10 @@ class ProductPage(BasePage):
                 else self.locators.CART_MODAL_CONTINUE_BUTTON
             )
             self.click_element(modal_action)
+
+    def add_first_product_to_cart(self, view_cart=False):
+        """Add the first visible product to the cart."""
+        self.add_product_to_cart(index=0, view_cart=view_cart)
     
     def get_product_names(self):
         """Get list of product names"""

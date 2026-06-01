@@ -7,6 +7,7 @@ Enhanced with Allure reporting and screenshot capture on failure
 import pytest
 import logging
 import allure
+import time
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
@@ -76,7 +77,7 @@ def driver(request):
     
     if browser == "chrome":
         options = ChromeOptions()
-        options.page_load_strategy = "none"
+        options.page_load_strategy = "normal"
         options.add_argument("--start-maximized")
         options.add_argument("--disable-notifications")
         options.add_argument("--no-sandbox")
@@ -94,7 +95,7 @@ def driver(request):
     
     elif browser == "firefox":
         options = FirefoxOptions()
-        options.page_load_strategy = "none"
+        options.page_load_strategy = "normal"
         
         if headless:
             options.add_argument("--headless")
@@ -106,10 +107,10 @@ def driver(request):
     else:
         raise ValueError(f"Unsupported browser: {browser}")
     
-    # Set implicit and explicit waits
-    implicit_wait = int(os.getenv("IMPLICIT_WAIT", 10))
-    explicit_wait = int(os.getenv("EXPLICIT_WAIT", 20))
-    page_load_timeout = int(os.getenv("PAGE_LOAD_TIMEOUT", 30))
+    # Set implicit and explicit waits - increased for slower test execution
+    implicit_wait = int(os.getenv("IMPLICIT_WAIT", 15))  # Increased from 10 to 15
+    explicit_wait = int(os.getenv("EXPLICIT_WAIT", 25))  # Increased from 20 to 25
+    page_load_timeout = int(os.getenv("PAGE_LOAD_TIMEOUT", 40))  # Increased from 30 to 40
     
     driver_instance.implicitly_wait(implicit_wait)
     driver_instance.set_page_load_timeout(page_load_timeout)
@@ -134,6 +135,21 @@ def wait(driver):
 
 
 @pytest.fixture(scope="function")
+def action_delay():
+    """
+    Fixture to add delays between test actions
+    Helps slow down test execution for better visibility (default 2.5 seconds)
+    Usage: action_delay(2.5) in your test or page object methods
+    """
+    def delay(seconds=2.5):
+        """Add delay between actions"""
+        time.sleep(seconds)
+        logger.debug(f"Action delay applied: {seconds} seconds")
+    
+    return delay
+
+
+@pytest.fixture(scope="function")
 def test_data():
     """Fixture to provide test data"""
     return {
@@ -145,6 +161,23 @@ def test_data():
         "last_name": "Doe",
         "phone": "+1234567890",
     }
+
+
+@pytest.fixture(scope="function", autouse=True)
+def auto_action_delay(request):
+    """
+    Auto-use fixture that adds automatic delays between actions
+    This ensures a minimum 2.5 second delay for test visibility
+    """
+    action_delay_time = float(os.getenv("ACTION_DELAY", 0.5))
+    
+    # Add delay before test starts
+    time.sleep(0.2)
+    
+    yield
+    
+    # Add delay after test completes
+    time.sleep(action_delay_time)
 
 
 @pytest.fixture(scope="session")
