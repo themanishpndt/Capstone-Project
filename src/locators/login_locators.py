@@ -24,7 +24,7 @@ class LoginLocators:
     SIGNUP_BUTTON = (By.CSS_SELECTOR, "button[data-qa='signup-button']")
     
     # Registration form - Account Information
-    ENTER_ACCOUNT_INFO_HEADING = (By.XPATH, "//h2[contains(text(), 'Account Information')]")
+    ENTER_ACCOUNT_INFO_HEADING = (By.XPATH, "//*[contains(normalize-space(), 'ENTER ACCOUNT INFORMATION')]")
     TITLE_MR_RADIO = (By.ID, "id_gender1")
     TITLE_MRS_RADIO = (By.ID, "id_gender2")
     NAME_INPUT = (By.CSS_SELECTOR, "input[data-qa='name']")
