@@ -13,7 +13,7 @@ class Config:
     """Configuration class for the test suite"""
     
     # Base URL
-    BASE_URL = os.getenv('BASE_URL', 'https://www.example.com')
+    BASE_URL = os.getenv('BASE_URL', 'https://automationexercise.com')
     
     # Browser Configuration
     BROWSER = os.getenv('BROWSER', 'chrome')
@@ -27,7 +27,7 @@ class Config:
     
     # Test Data
     TEST_USER_EMAIL = os.getenv('TEST_USER_EMAIL', 'test@example.com')
-    TEST_USER_PASSWORD = os.getenv('TEST_USER_PASSWORD', 'password123')
+    TEST_USER_PASSWORD = os.getenv('TEST_USER_PASSWORD', 'Password123!')
     
     # Logging
     LOG_LEVEL = os.getenv('LOG_LEVEL', 'INFO')

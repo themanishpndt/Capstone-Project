@@ -10,6 +10,7 @@ import allure
 import time
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as ChromeOptions
+from selenium.webdriver.edge.options import Options as EdgeOptions
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.firefox import GeckoDriverManager
@@ -45,15 +46,15 @@ logger = logging.getLogger(__name__)
 def pytest_addoption(parser):
     """Add custom command line options"""
     parser.addoption(
-        "--browser", action="store", default="chrome",
-        help="Browser to run tests on: chrome or firefox"
+        "--browser", action="store", default=os.getenv("BROWSER", "chrome"),
+        help="Browser to run tests on: chrome, firefox, or edge"
     )
     parser.addoption(
         "--headless", action="store_true", default=False,
         help="Run browser in headless mode"
     )
     parser.addoption(
-        "--base_url", action="store", default="http://automationexercise.com",
+        "--base_url", action="store", default=os.getenv("BASE_URL", "https://automationexercise.com"),
         help="Base URL for the application"
     )
 
@@ -61,7 +62,10 @@ def pytest_addoption(parser):
 @pytest.fixture(scope="session")
 def base_url(request):
     """Fixture to provide base URL"""
-    return request.config.getoption("--base_url")
+    configured_url = request.config.getoption("--base_url").rstrip("/")
+    if configured_url.startswith("http://automationexercise.com"):
+        return configured_url.replace("http://", "https://", 1)
+    return configured_url
 
 
 @pytest.fixture(scope="function")
@@ -74,6 +78,8 @@ def driver(request):
     headless = request.config.getoption("--headless")
     
     logger.info(f"Initializing {browser} WebDriver (headless={headless})")
+    download_dir = os.path.abspath(os.getenv("DOWNLOAD_DIR", "reports/downloads"))
+    os.makedirs(download_dir, exist_ok=True)
     
     if browser == "chrome":
         options = ChromeOptions()
@@ -85,9 +91,19 @@ def driver(request):
         options.add_argument("--disable-gpu")
         options.add_argument("--disable-extensions")
         options.add_argument("--disable-popup-blocking")
+        options.add_argument("--window-size=1920,1080")
+        options.add_experimental_option(
+            "prefs",
+            {
+                "download.default_directory": download_dir,
+                "download.prompt_for_download": False,
+                "download.directory_upgrade": True,
+                "safebrowsing.enabled": True,
+            },
+        )
         
         if headless:
-            options.add_argument("--headless")
+            options.add_argument("--headless=new")
         
         driver_instance = webdriver.Chrome(
             options=options
@@ -96,6 +112,9 @@ def driver(request):
     elif browser == "firefox":
         options = FirefoxOptions()
         options.page_load_strategy = "normal"
+        options.set_preference("browser.download.folderList", 2)
+        options.set_preference("browser.download.dir", download_dir)
+        options.set_preference("browser.helperApps.neverAsk.saveToDisk", "text/plain,application/octet-stream")
         
         if headless:
             options.add_argument("--headless")
@@ -103,6 +122,28 @@ def driver(request):
         driver_instance = webdriver.Firefox(
             options=options
         )
+
+    elif browser == "edge":
+        options = EdgeOptions()
+        options.page_load_strategy = "normal"
+        options.add_argument("--start-maximized")
+        options.add_argument("--disable-notifications")
+        options.add_argument("--disable-popup-blocking")
+        options.add_argument("--window-size=1920,1080")
+        options.add_experimental_option(
+            "prefs",
+            {
+                "download.default_directory": download_dir,
+                "download.prompt_for_download": False,
+                "download.directory_upgrade": True,
+                "safebrowsing.enabled": True,
+            },
+        )
+
+        if headless:
+            options.add_argument("--headless=new")
+
+        driver_instance = webdriver.Edge(options=options)
     
     else:
         raise ValueError(f"Unsupported browser: {browser}")
@@ -169,7 +210,7 @@ def auto_action_delay(request):
     Auto-use fixture that adds automatic delays between actions
     This ensures a minimum 2.5 second delay for test visibility
     """
-    action_delay_time = float(os.getenv("ACTION_DELAY", 0.5))
+    action_delay_time = float(os.getenv("ACTION_DELAY", 0))
     
     # Add delay before test starts
     time.sleep(0.2)
