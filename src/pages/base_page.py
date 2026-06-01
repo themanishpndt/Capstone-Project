@@ -104,6 +104,10 @@ class BasePage:
         """Navigate to specific URL"""
         try:
             self.driver.get(url)
+            try:
+                self.driver.execute_script("window.stop();")
+            except WebDriverException:
+                pass
             self.logger.info(f"Navigated to: {url}")
         except TimeoutException:
             self.logger.warning(f"Page load timed out for {url}; stopping load and continuing")

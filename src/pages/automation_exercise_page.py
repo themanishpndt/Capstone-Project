@@ -124,7 +124,6 @@ class AutomationExercisePage(BasePage):
 
     def open_home(self):
         self.navigate_to(self._url("/"))
-        self.wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
         self.assert_home_visible()
 
     def assert_home_visible(self):
@@ -170,12 +169,13 @@ class AutomationExercisePage(BasePage):
         self._click((By.XPATH, "//a[contains(@class, 'btn') and normalize-space()='Home']"))
         self.assert_home_visible()
 
-    def signup_new_user(self, user):
+    def signup_new_user(self, user, expect_account_information=True):
         self.assert_text_visible("New User Signup!")
         self._type((By.CSS_SELECTOR, "[data-qa='signup-name']"), user["name"])
         self._type((By.CSS_SELECTOR, "[data-qa='signup-email']"), user["email"])
         self._click((By.CSS_SELECTOR, "[data-qa='signup-button']"))
-        self.assert_text_visible("ENTER ACCOUNT INFORMATION")
+        if expect_account_information:
+            self.assert_text_visible("ENTER ACCOUNT INFORMATION")
 
     def fill_account_information(self, user):
         gender_id = "id_gender1" if user.get("title", "Mr") == "Mr" else "id_gender2"

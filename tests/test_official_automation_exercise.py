@@ -109,7 +109,7 @@ class TestOfficialAutomationExercise:
             app.open_home()
             app.register_new_user(user)
             app.logout()
-            app.signup_new_user(user)
+            app.signup_new_user(user, expect_account_information=False)
             app.assert_existing_email_error()
         finally:
             cleanup_account(app, user)

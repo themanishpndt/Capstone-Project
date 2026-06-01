@@ -83,7 +83,7 @@ def driver(request):
     
     if browser == "chrome":
         options = ChromeOptions()
-        options.page_load_strategy = "normal"
+        options.page_load_strategy = os.getenv("PAGE_LOAD_STRATEGY", "eager")
         options.add_argument("--start-maximized")
         options.add_argument("--disable-notifications")
         options.add_argument("--no-sandbox")
@@ -111,7 +111,7 @@ def driver(request):
     
     elif browser == "firefox":
         options = FirefoxOptions()
-        options.page_load_strategy = "normal"
+        options.page_load_strategy = os.getenv("PAGE_LOAD_STRATEGY", "eager")
         options.set_preference("browser.download.folderList", 2)
         options.set_preference("browser.download.dir", download_dir)
         options.set_preference("browser.helperApps.neverAsk.saveToDisk", "text/plain,application/octet-stream")
@@ -125,7 +125,7 @@ def driver(request):
 
     elif browser == "edge":
         options = EdgeOptions()
-        options.page_load_strategy = "normal"
+        options.page_load_strategy = os.getenv("PAGE_LOAD_STRATEGY", "eager")
         options.add_argument("--start-maximized")
         options.add_argument("--disable-notifications")
         options.add_argument("--disable-popup-blocking")
