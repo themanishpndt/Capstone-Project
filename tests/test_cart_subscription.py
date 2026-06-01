@@ -27,10 +27,7 @@ class TestCartSubscription:
             product_page = ProductPage(driver)
             product_page.navigate_to(f"{base_url}/products")
             
-            # Click on a product and add to cart
-            products = product_page.find_elements(product_page.locators.PRODUCT_ITEMS)
-            if products:
-                products[0].click()
+            product_page.add_first_product_to_cart()
         
         with allure.step("Navigate to cart page"):
             cart_page = CartPage(driver)

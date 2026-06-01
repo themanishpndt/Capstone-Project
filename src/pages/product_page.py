@@ -35,6 +35,23 @@ class ProductPage(BasePage):
 
         self.navigate_to(product_url)
         self.wait_for_url_contains("/product_details/")
+
+    def add_first_product_to_cart(self, view_cart=False):
+        """Add the first visible product to the cart."""
+        buttons = self.find_elements(self.locators.ADD_TO_CART_BUTTONS)
+        visible_buttons = [button for button in buttons if button.is_displayed()]
+        if not visible_buttons:
+            raise AssertionError("No visible add-to-cart buttons found")
+
+        self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", visible_buttons[0])
+        self.driver.execute_script("arguments[0].click();", visible_buttons[0])
+        if self.is_element_visible(self.locators.CART_MODAL):
+            modal_action = (
+                self.locators.CART_MODAL_VIEW_CART_LINK
+                if view_cart
+                else self.locators.CART_MODAL_CONTINUE_BUTTON
+            )
+            self.click_element(modal_action)
     
     def get_product_names(self):
         """Get list of product names"""

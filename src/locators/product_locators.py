@@ -20,6 +20,10 @@ class ProductLocators:
     
     # Add to cart
     ADD_TO_CART_BUTTON = (By.XPATH, ".//a[@class='btn btn-default add-to-cart']")
+    ADD_TO_CART_BUTTONS = (By.XPATH, "//a[contains(@class, 'add-to-cart')]")
+    CART_MODAL = (By.ID, "cartModal")
+    CART_MODAL_VIEW_CART_LINK = (By.XPATH, "//div[@id='cartModal']//u[contains(text(), 'View Cart')]/ancestor::a")
+    CART_MODAL_CONTINUE_BUTTON = (By.XPATH, "//div[@id='cartModal']//button[contains(text(), 'Continue Shopping')]")
     
     # Search and filter
     SEARCH_INPUT = (By.ID, "search_product")

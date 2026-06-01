@@ -34,9 +34,9 @@ class HomeLocators:
     
     # Footer
     FOOTER_SECTION = (By.TAG_NAME, "footer")
-    FOOTER_SUBSCRIPTION_EMAIL = (By.XPATH, "//footer//input[@placeholder='Your email address']")
-    FOOTER_SUBSCRIPTION_BUTTON = (By.XPATH, "//footer//button[contains(text(), 'Subscribe')]")
-    FOOTER_SUBSCRIPTION_SUCCESS = (By.XPATH, "//footer//div[contains(text(), 'You have been successfully')]")
+    FOOTER_SUBSCRIPTION_EMAIL = (By.ID, "susbscribe_email")
+    FOOTER_SUBSCRIPTION_BUTTON = (By.ID, "subscribe")
+    FOOTER_SUBSCRIPTION_SUCCESS = (By.XPATH, "//div[@id='success-subscribe']//*[contains(text(), 'You have been successfully')]")
     
     # Recommended items
     RECOMMENDED_SECTION = (By.CLASS_NAME, "recommended_items")
