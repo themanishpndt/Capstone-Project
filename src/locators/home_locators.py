@@ -39,9 +39,11 @@ class HomeLocators:
     FOOTER_SUBSCRIPTION_SUCCESS = (By.XPATH, "//footer//div[contains(text(), 'You have been successfully')]")
     
     # Recommended items
-    RECOMMENDED_SECTION = (By.CLASS_NAME, "recommended")
-    RECOMMENDED_PRODUCTS = (By.XPATH, "//div[@class='recommended']//div[@class='product-image-wrapper']")
-    RECOMMENDED_ADD_TO_CART_BUTTONS = (By.XPATH, "//div[@class='recommended']//a[@class='btn btn-default add-to-cart']")
+    RECOMMENDED_SECTION = (By.CLASS_NAME, "recommended_items")
+    RECOMMENDED_PRODUCTS = (By.XPATH, "//div[contains(@class, 'recommended_items')]//div[contains(@class, 'product-image-wrapper')]")
+    RECOMMENDED_ADD_TO_CART_BUTTONS = (By.XPATH, "//div[contains(@class, 'recommended_items')]//a[contains(@class, 'add-to-cart')]")
+    CART_MODAL = (By.ID, "cartModal")
+    CART_MODAL_VIEW_CART_LINK = (By.XPATH, "//div[@id='cartModal']//u[contains(text(), 'View Cart')]/ancestor::a")
     
     # Scroll elements
     SCROLL_TOP_ARROW = (By.ID, "scrollUp")

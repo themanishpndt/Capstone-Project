@@ -76,7 +76,7 @@ def driver(request):
     
     if browser == "chrome":
         options = ChromeOptions()
-        options.page_load_strategy = "eager"
+        options.page_load_strategy = "none"
         options.add_argument("--start-maximized")
         options.add_argument("--disable-notifications")
         options.add_argument("--no-sandbox")
@@ -94,6 +94,7 @@ def driver(request):
     
     elif browser == "firefox":
         options = FirefoxOptions()
+        options.page_load_strategy = "none"
         
         if headless:
             options.add_argument("--headless")

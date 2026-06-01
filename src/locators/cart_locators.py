@@ -12,7 +12,7 @@ class CartLocators:
     CART_URL = "https://automationexercise.com/view_cart"
     
     # Cart items
-    CART_ITEMS = (By.XPATH, "//tr[@class='active']")
+    CART_ITEMS = (By.XPATH, "//tr[starts-with(@id, 'product-')]")
     ITEM_NAME = (By.XPATH, ".//td[2]/h4/a")
     ITEM_PRICE = (By.XPATH, ".//td[3]")
     ITEM_QUANTITY = (By.XPATH, ".//td[4]/button")

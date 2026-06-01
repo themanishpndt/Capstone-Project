@@ -93,9 +93,15 @@ class HomePage(BasePage):
     def add_first_recommended_product_to_cart(self):
         """Add first recommended product to cart"""
         buttons = self.find_elements(self.home_locators.RECOMMENDED_ADD_TO_CART_BUTTONS)
-        if buttons:
-            buttons[0].click()
-            self.logger.info("Added first recommended product to cart")
+        visible_buttons = [button for button in buttons if button.is_displayed()]
+        if not visible_buttons:
+            raise AssertionError("No visible recommended add-to-cart buttons found")
+
+        self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", visible_buttons[0])
+        self.driver.execute_script("arguments[0].click();", visible_buttons[0])
+        if self.is_element_visible(self.home_locators.CART_MODAL):
+            self.click_element(self.home_locators.CART_MODAL_VIEW_CART_LINK)
+        self.logger.info("Added first recommended product to cart")
     
     def scroll_to_footer(self):
         """Scroll to footer section"""
