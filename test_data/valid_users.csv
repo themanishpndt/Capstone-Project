@@ -1,0 +1,9 @@
+"""
+Test Data - Valid Users
+"""
+
+email,password,first_name,last_name
+test1@example.com,Password123!,John,Doe
+test2@example.com,SecurePass456!,Jane,Smith
+test3@example.com,TestPass789!,Mike,Johnson
+admin@example.com,AdminPass123!,Admin,User

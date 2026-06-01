@@ -1,0 +1,30 @@
+# Selenium and WebDriver Management
+selenium==4.15.2
+webdriver-manager==4.0.1
+
+# Testing Framework
+pytest==7.4.3
+pytest-xdist==3.5.0
+pytest-html==4.1.1
+pytest-cov==4.1.0
+pytest-timeout==2.2.0
+allure-pytest==2.13.2
+
+# Test Data and Utilities
+Faker==21.0.0
+openpyxl==3.1.2
+Pillow==10.1.0
+
+# HTTP and API Testing
+requests==2.31.0
+
+# Environment and Configuration
+python-dotenv==1.0.0
+
+# Logging and Reporting
+colorlog==6.8.0
+
+# Code Quality
+black==23.12.1
+flake8==6.1.0
+pylint==3.0.3
