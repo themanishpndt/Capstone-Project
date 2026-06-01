@@ -130,4 +130,132 @@ class LoginPage(BasePage):
         except Exception as e:
             self.logger.warning(f"Could not verify login success: {e}")
             return False
+    
+    # Registration form methods
+    def is_account_info_visible(self):
+        """Verify ENTER ACCOUNT INFORMATION section is visible"""
+        return self.is_element_visible(self.locators.ENTER_ACCOUNT_INFO_HEADING)
+    
+    def select_title_mr(self):
+        """Select Mr. title"""
+        self.click_element(self.locators.TITLE_MR_RADIO)
+        self.logger.info("Selected Title: Mr.")
+    
+    def select_title_mrs(self):
+        """Select Mrs. title"""
+        self.click_element(self.locators.TITLE_MRS_RADIO)
+        self.logger.info("Selected Title: Mrs.")
+    
+    def enter_reg_name(self, name):
+        """Enter name in registration form"""
+        self.enter_text(self.locators.NAME_INPUT, name)
+        self.logger.info(f"Entered registration name: {name}")
+    
+    def enter_reg_email(self, email):
+        """Enter email in registration form"""
+        self.enter_text(self.locators.REG_EMAIL_INPUT, email)
+        self.logger.info(f"Entered registration email: {email}")
+    
+    def enter_reg_password(self, password):
+        """Enter password in registration form"""
+        self.enter_text(self.locators.REG_PASSWORD_INPUT, password)
+        self.logger.info("Entered registration password")
+    
+    def select_date_of_birth(self, day, month, year):
+        """Select date of birth from dropdown menus"""
+        from selenium.webdriver.support.select import Select
+        
+        # Select day
+        day_dropdown = self.find_element(self.locators.DATE_OF_BIRTH_DAY)
+        Select(day_dropdown).select_by_value(day)
+        self.logger.info(f"Selected day: {day}")
+        
+        # Select month
+        month_dropdown = self.find_element(self.locators.DATE_OF_BIRTH_MONTH)
+        Select(month_dropdown).select_by_value(month)
+        self.logger.info(f"Selected month: {month}")
+        
+        # Select year
+        year_dropdown = self.find_element(self.locators.DATE_OF_BIRTH_YEAR)
+        Select(year_dropdown).select_by_value(year)
+        self.logger.info(f"Selected year: {year}")
+    
+    def check_newsletter(self):
+        """Check newsletter checkbox"""
+        self.click_element(self.locators.NEWSLETTER_CHECKBOX)
+        self.logger.info("Checked newsletter checkbox")
+    
+    def check_special_offers(self):
+        """Check special offers checkbox"""
+        self.click_element(self.locators.SPECIAL_OFFERS_CHECKBOX)
+        self.logger.info("Checked special offers checkbox")
+    
+    def enter_company(self, company):
+        """Enter company name"""
+        self.enter_text(self.locators.COMPANY_INPUT, company)
+        self.logger.info(f"Entered company: {company}")
+    
+    def enter_address(self, address):
+        """Enter address"""
+        self.enter_text(self.locators.ADDRESS_INPUT, address)
+        self.logger.info(f"Entered address: {address}")
+    
+    def enter_address2(self, address2):
+        """Enter address 2"""
+        self.enter_text(self.locators.ADDRESS2_INPUT, address2)
+        self.logger.info(f"Entered address 2: {address2}")
+    
+    def select_country(self, country):
+        """Select country from dropdown"""
+        from selenium.webdriver.support.select import Select
+        dropdown = self.find_element(self.locators.COUNTRY_DROPDOWN)
+        Select(dropdown).select_by_value(country)
+        self.logger.info(f"Selected country: {country}")
+    
+    def enter_state(self, state):
+        """Enter state"""
+        self.enter_text(self.locators.STATE_INPUT, state)
+        self.logger.info(f"Entered state: {state}")
+    
+    def enter_city(self, city):
+        """Enter city"""
+        self.enter_text(self.locators.CITY_INPUT, city)
+        self.logger.info(f"Entered city: {city}")
+    
+    def enter_zipcode(self, zipcode):
+        """Enter zipcode"""
+        self.enter_text(self.locators.ZIPCODE_INPUT, zipcode)
+        self.logger.info(f"Entered zipcode: {zipcode}")
+    
+    def enter_mobile_number(self, mobile):
+        """Enter mobile number"""
+        self.enter_text(self.locators.MOBILE_NUMBER_INPUT, mobile)
+        self.logger.info(f"Entered mobile number: {mobile}")
+    
+    def click_create_account(self):
+        """Click Create Account button"""
+        self.click_element(self.locators.CREATE_ACCOUNT_BUTTON)
+        self.logger.info("Clicked Create Account button")
+    
+    def is_account_created_visible(self):
+        """Verify ACCOUNT CREATED message is visible"""
+        return self.is_element_visible(self.locators.ACCOUNT_CREATED_MESSAGE)
+    
+    def click_continue(self):
+        """Click Continue button"""
+        self.click_element(self.locators.CONTINUE_BUTTON)
+        self.logger.info("Clicked Continue button")
+    
+    def is_logged_in_visible(self):
+        """Verify 'Logged in as' message is visible"""
+        return self.is_element_visible(self.locators.LOGGED_IN_AS_MESSAGE)
+    
+    def click_delete_account(self):
+        """Click Delete Account button"""
+        self.click_element(self.locators.DELETE_ACCOUNT_BUTTON)
+        self.logger.info("Clicked Delete Account button")
+    
+    def is_account_deleted_visible(self):
+        """Verify ACCOUNT DELETED message is visible"""
+        return self.is_element_visible(self.locators.ACCOUNT_DELETED_MESSAGE)
 

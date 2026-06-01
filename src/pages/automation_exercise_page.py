@@ -10,6 +10,7 @@ from pathlib import Path
 from selenium.common.exceptions import (
     ElementClickInterceptedException,
     NoAlertPresentException,
+    StaleElementReferenceException,
     TimeoutException,
     WebDriverException,
 )
@@ -79,21 +80,25 @@ class AutomationExercisePage(BasePage):
     def _click(self, locator, timeout=None):
         self._hide_ad_frames()
         wait = self.wait if timeout is None else WebDriverWait(self.driver, timeout)
-        element = wait.until(EC.element_to_be_clickable(locator))
-        self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", element)
-        try:
-            element.click()
-        except (ElementClickInterceptedException, WebDriverException):
-            self.driver.execute_script("arguments[0].click();", element)
-        return element
+        last_error = None
+        for _ in range(2):
+            element = wait.until(EC.element_to_be_clickable(locator))
+            self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", element)
+            try:
+                self.driver.execute_script("arguments[0].click();", element)
+                return element
+            except (StaleElementReferenceException, WebDriverException) as error:
+                last_error = error
+                time.sleep(0.3)
+        raise last_error
 
     def _click_element(self, element):
         self._hide_ad_frames()
         self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", element)
         try:
-            element.click()
-        except (ElementClickInterceptedException, WebDriverException):
             self.driver.execute_script("arguments[0].click();", element)
+        except (ElementClickInterceptedException, StaleElementReferenceException, WebDriverException):
+            element.click()
 
     def _type(self, locator, value):
         self._hide_ad_frames()
