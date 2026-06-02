@@ -30,10 +30,18 @@ class LoginPage(BasePage):
         self.enter_text(self.locators.EMAIL_INPUT, email)
         self.logger.info(f"Entered email: {email}")
     
+    def enter_login_email(self, email):
+        """Alias for enter_email - Enter email for login"""
+        self.enter_email(email)
+    
     def enter_password(self, password):
         """Enter password in password field"""
         self.enter_text(self.locators.PASSWORD_INPUT, password)
         self.logger.info("Entered password")
+    
+    def enter_login_password(self, password):
+        """Alias for enter_password - Enter password for login"""
+        self.enter_password(password)
     
     def click_login_button(self):
         """Click login button"""
@@ -278,19 +286,63 @@ class LoginPage(BasePage):
     
     def click_create_account(self):
         """Click Create Account button"""
-        self.click_element(self.locators.CREATE_ACCOUNT_BUTTON)
-        self.logger.info("Clicked Create Account button")
+        try:
+            from selenium.webdriver.support.ui import WebDriverWait
+            from selenium.webdriver.support import expected_conditions as EC
+            
+            # Scroll the button into view
+            button = self.find_element(self.locators.CREATE_ACCOUNT_BUTTON)
+            self.driver.execute_script("arguments[0].scrollIntoView(true);", button)
+            
+            # Wait for the button to be clickable
+            clickable_button = WebDriverWait(self.driver, 10).until(
+                EC.element_to_be_clickable(self.locators.CREATE_ACCOUNT_BUTTON)
+            )
+            
+            # Click the button
+            clickable_button.click()
+            self.logger.info("Clicked Create Account button")
+        except Exception as e:
+            self.logger.error(f"Error clicking Create Account button: {e}")
+            # Fallback: try clicking directly
+            self.click_element(self.locators.CREATE_ACCOUNT_BUTTON)
+            self.logger.info("Clicked Create Account button (fallback)")
+
     
     def is_account_created_visible(self):
         """Verify ACCOUNT CREATED message is visible"""
         try:
-            # Use JavaScript to check if the text exists on the page
-            result = self.driver.execute_script("""
-                const bodyText = document.body.innerText;
-                return bodyText.includes('ACCOUNT CREATED');
-            """)
-            self.logger.info(f"Account created message visible (via JavaScript): {result}")
-            return result
+            from selenium.webdriver.support.ui import WebDriverWait
+            from selenium.webdriver.support import expected_conditions as EC
+            from selenium.webdriver.common.by import By
+            
+            # First, try to find the exact heading element with WebDriverWait
+            try:
+                account_created = WebDriverWait(self.driver, 10).until(
+                    EC.visibility_of_element_located(
+                        (By.XPATH, "//h2[contains(text(), 'ACCOUNT CREATED')]")
+                    )
+                )
+                self.logger.info("Account created message found via locator")
+                return account_created.is_displayed()
+            except:
+                # Fallback: use JavaScript to check page text
+                result = self.driver.execute_script("""
+                    const bodyText = document.body.innerText.toUpperCase();
+                    const hasAccountCreated = bodyText.includes('ACCOUNT CREATED');
+                    console.log('Account Created text found:', hasAccountCreated);
+                    return hasAccountCreated;
+                """)
+                self.logger.info(f"Account created message visible (via JavaScript): {result}")
+                if result:
+                    return True
+                    
+                # If still not found, print debug info
+                self.logger.error(f"Account Created message not found. Current URL: {self.driver.current_url}")
+                page_text = self.driver.find_element(By.TAG_NAME, "body").text
+                self.logger.error(f"Page text first 500 chars: {page_text[:500]}")
+                return False
+                
         except Exception as e:
             self.logger.error(f"Error checking account created visibility: {e}")
             return False
