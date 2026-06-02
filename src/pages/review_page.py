@@ -153,3 +153,7 @@ class ReviewPage(BasePage):
         is_visible = self.is_element_visible(self.locators.REVIEWS_SECTION)
         self.logger.info(f"Review section visible: {is_visible}")
         return is_visible
+    
+    def submit_review(self):
+        """Submit review (alias for click_submit_review)"""
+        self.click_submit_review()

@@ -44,13 +44,19 @@ class CheckoutLocators:
     ORDER_TOTAL = (By.XPATH, "//h4/strong[contains(text(), 'Total')]")
     ORDER_ITEMS = (By.XPATH, "//tr[@class='active']")
     
+    # Order comment
+    ORDER_COMMENT_TEXTAREA = (By.NAME, "order_comment")
+    ORDER_COMMENT = (By.XPATH, "//textarea[@name='order_comment' or @id='order_comment']")
+    
     # Buttons
     PLACE_ORDER_BUTTON = (By.XPATH, "//button[contains(text(), 'Place Order')]")
     BACK_BUTTON = (By.XPATH, "//button[contains(text(), 'Back')]")
     DOWNLOAD_INVOICE_BUTTON = (By.XPATH, "//a[contains(text(), 'Download Invoice')]")
+    REGISTER_LOGIN_BUTTON = (By.XPATH, "//a[contains(text(), 'Register') or contains(text(), 'Login') or contains(text(), 'Signup')]")
+    PAY_AND_CONFIRM_BUTTON = (By.XPATH, "//button[contains(text(), 'Pay') or contains(text(), 'Confirm')] | //input[@value='Pay and Confirm Order']")
     
     # Confirmation
-    ORDER_CONFIRMATION_MESSAGE = (By.XPATH, "//span[contains(text(), 'Congratulations')]")
+    ORDER_CONFIRMATION_MESSAGE = (By.XPATH, "//span[contains(text(), 'Congratulations')] | //h2[contains(text(), 'Congratulations')]")
     ORDER_NUMBER = (By.XPATH, "//span[@class='order-id']")
     
     # Registration during checkout

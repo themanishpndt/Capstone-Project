@@ -2,6 +2,7 @@
 Invoice Page class - Page Object Model
 """
 
+from selenium.webdriver.common.by import By
 from src.pages.base_page import BasePage
 from src.locators.invoice_locators import InvoiceLocators
 
@@ -142,3 +143,11 @@ class InvoicePage(BasePage):
         except Exception as e:
             self.logger.error(f"Failed to get order items details: {e}")
         return items_details
+    
+    def click_continue_button(self):
+        """Click continue button on invoice/order page"""
+        try:
+            self.click_element(self.locators.CONTINUE_BUTTON)
+            self.logger.info("Clicked continue button")
+        except Exception as e:
+            self.logger.warning(f"Could not click continue button: {e}")

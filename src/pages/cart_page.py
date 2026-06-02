@@ -164,4 +164,8 @@ class CartPage(BasePage):
         is_empty = self.is_element_visible(self.locators.EMPTY_CART_MESSAGE)
         self.logger.info(f"Cart empty status: {is_empty}")
         return is_empty
+    
+    def remove_product_from_cart(self, index):
+        """Remove product from cart at given index"""
+        self.remove_item(index)
 

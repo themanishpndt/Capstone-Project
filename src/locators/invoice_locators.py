@@ -47,3 +47,4 @@ class InvoiceLocators:
     DOWNLOAD_INVOICE_BUTTON = (By.XPATH, "//a[contains(text(), 'Download Invoice')]")
     PRINT_BUTTON = (By.XPATH, "//button[contains(text(), 'Print')]")
     BACK_TO_ORDERS_BUTTON = (By.XPATH, "//a[contains(text(), 'Back to Orders')]")
+    CONTINUE_BUTTON = (By.XPATH, "//a[contains(text(), 'Continue') or contains(text(), 'Back')] | //button[contains(text(), 'Continue')]")

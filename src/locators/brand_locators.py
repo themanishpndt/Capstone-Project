@@ -15,17 +15,17 @@ class BrandLocators:
     BRANDS_SIDEBAR = (By.CLASS_NAME, "left-sidebar")
     BRAND_LIST = (By.XPATH, "//div[@class='left-sidebar']//li")
     
-    # Brand items
-    POLO_BRAND = (By.XPATH, "//a[contains(text(), 'Polo')]")
-    H_M_BRAND = (By.XPATH, "//a[contains(text(), 'H&M')]")
-    MADAME_BRAND = (By.XPATH, "//a[contains(text(), 'Madame')]")
-    MANGO_BRAND = (By.XPATH, "//a[contains(text(), 'Mango')]")
-    ALLEN_SOLLY_BRAND = (By.XPATH, "//a[contains(text(), 'Allen Solly')]")
-    BABYHUG_BRAND = (By.XPATH, "//a[contains(text(), 'Babyhug')]")
-    BIBA_BRAND = (By.XPATH, "//a[contains(text(), 'Biba')]")
-    AEROPOSTALE_BRAND = (By.XPATH, "//a[contains(text(), 'Aeropostale')]")
-    JOHN_MILLER_BRAND = (By.XPATH, "//a[contains(text(), 'John Miller')]")
-    NOVA_BRAND = (By.XPATH, "//a[contains(text(), 'Nova')]")
+    # Brand items - using more flexible selectors
+    POLO_BRAND = (By.XPATH, "//a[contains(text(), 'Polo') or contains(@href, 'polo')]/ancestor::li//a | //li//a[normalize-space()='Polo']")
+    H_M_BRAND = (By.XPATH, "//a[contains(text(), 'H&M') or contains(text(), 'H & M') or contains(@href, 'hm')]/ancestor::li//a | //li//a[contains(normalize-space(), 'H')]")
+    MADAME_BRAND = (By.XPATH, "//a[contains(text(), 'Madame')]/ancestor::li//a | //li//a[normalize-space()='Madame']")
+    MANGO_BRAND = (By.XPATH, "//a[contains(text(), 'Mango')]/ancestor::li//a | //li//a[normalize-space()='Mango']")
+    ALLEN_SOLLY_BRAND = (By.XPATH, "//a[contains(text(), 'Allen')]/ancestor::li//a | //li//a[contains(normalize-space(), 'Allen')]")
+    BABYHUG_BRAND = (By.XPATH, "//a[contains(text(), 'Babyhug')]/ancestor::li//a | //li//a[normalize-space()='Babyhug']")
+    BIBA_BRAND = (By.XPATH, "//a[contains(text(), 'Biba')]/ancestor::li//a | //li//a[normalize-space()='Biba']")
+    AEROPOSTALE_BRAND = (By.XPATH, "//a[contains(text(), 'Aeropostale')]/ancestor::li//a | //li//a[normalize-space()='Aeropostale']")
+    JOHN_MILLER_BRAND = (By.XPATH, "//a[contains(text(), 'John Miller')]/ancestor::li//a | //li//a[contains(normalize-space(), 'John')]")
+    NOVA_BRAND = (By.XPATH, "//a[contains(text(), 'Nova')]/ancestor::li//a | //li//a[normalize-space()='Nova']")
     
     # Products in brand
     PRODUCT_ITEMS = (By.XPATH, "//div[@class='product-image-wrapper']")

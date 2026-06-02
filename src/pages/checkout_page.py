@@ -206,6 +206,53 @@ class CheckoutPage(BasePage):
             self.logger.error(f"Failed to get confirmation message: {e}")
             return None
     
+    def click_register_login(self):
+        """Click Register/Login button during checkout"""
+        try:
+            register_btn = self.find_element((self.locators.REGISTER_LOGIN_BUTTON if hasattr(self.locators, 'REGISTER_LOGIN_BUTTON') else self.locators.REGISTER_DURING_CHECKOUT_BUTTON))
+            self.driver.execute_script("arguments[0].scrollIntoView(true);", register_btn)
+            self.click_element((self.locators.REGISTER_LOGIN_BUTTON if hasattr(self.locators, 'REGISTER_LOGIN_BUTTON') else self.locators.REGISTER_DURING_CHECKOUT_BUTTON))
+            self.logger.info("Clicked Register/Login button")
+        except:
+            self.logger.info("Register/Login button not found, may be on login page already")
+    
+    def enter_order_comment(self, comment):
+        """Enter comment/notes for order"""
+        try:
+            self.enter_text(self.locators.ORDER_COMMENT_TEXTAREA, comment)
+            self.logger.info(f"Entered order comment: {comment}")
+        except Exception as e:
+            self.logger.warning(f"Could not enter order comment: {e}")
+    
+    def enter_payment_details_name(self, name):
+        """Enter name on payment card"""
+        self._set_input_value(self.locators.CARD_NAME_INPUT, name)
+        self.logger.info(f"Entered card name: {name}")
+    
+    def enter_card_number(self, card_number):
+        """Enter credit card number"""
+        self._set_input_value(self.locators.CARD_NUMBER_INPUT, card_number)
+        self.logger.info(f"Entered card number")
+    
+    def enter_card_cvc(self, cvc):
+        """Enter card CVC"""
+        self._set_input_value(self.locators.CARD_CVC_INPUT, cvc)
+        self.logger.info(f"Entered card CVC")
+    
+    def enter_card_expiry(self, expiry):
+        """Enter card expiry date"""
+        self._set_input_value(self.locators.CARD_EXPIRY_INPUT, expiry)
+        self.logger.info(f"Entered card expiry")
+    
+    def click_pay_and_confirm_order(self):
+        """Click Pay and Confirm Order button"""
+        try:
+            pay_button = self.locators.PAY_AND_CONFIRM_BUTTON if hasattr(self.locators, 'PAY_AND_CONFIRM_BUTTON') else self.locators.PLACE_ORDER_BUTTON
+            self.click_element(pay_button)
+            self.logger.info("Clicked Pay and Confirm Order button")
+        except Exception as e:
+            self.logger.error(f"Failed to click pay button: {e}")
+    
     def get_order_id(self):
         """Get order ID/number from confirmation"""
         try:

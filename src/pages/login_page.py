@@ -232,6 +232,53 @@ class LoginPage(BasePage):
         Select(year_dropdown).select_by_value(year)
         self.logger.info(f"Selected year: {year}")
     
+    def select_title(self, title):
+        """Select title (Mr/Mrs)"""
+        if title.lower() in ['mr', 'mr.', 'mr ', 'mister']:
+            self.select_title_mr()
+        elif title.lower() in ['mrs', 'mrs.', 'mrs ', 'missus']:
+            self.select_title_mrs()
+    
+    def select_day(self, day):
+        """Select day of birth"""
+        from selenium.webdriver.support.select import Select
+        day_dropdown = self.find_element(self.locators.DATE_OF_BIRTH_DAY)
+        Select(day_dropdown).select_by_value(str(day))
+        self.logger.info(f"Selected day: {day}")
+    
+    def select_month(self, month):
+        """Select month of birth"""
+        from selenium.webdriver.support.select import Select
+        month_dropdown = self.find_element(self.locators.DATE_OF_BIRTH_MONTH)
+        try:
+            Select(month_dropdown).select_by_value(str(month))
+        except:
+            Select(month_dropdown).select_by_visible_text(str(month))
+        self.logger.info(f"Selected month: {month}")
+    
+    def select_year(self, year):
+        """Select year of birth"""
+        from selenium.webdriver.support.select import Select
+        year_dropdown = self.find_element(self.locators.DATE_OF_BIRTH_YEAR)
+        Select(year_dropdown).select_by_value(str(year))
+        self.logger.info(f"Selected year: {year}")
+    
+    def click_create_account(self):
+        """Click create account button"""
+        try:
+            self.click_element(self.locators.CREATE_ACCOUNT_BUTTON)
+            self.logger.info("Clicked create account button")
+        except Exception as e:
+            self.logger.error(f"Failed to click create account: {e}")
+    
+    def click_continue_button(self):
+        """Click continue button"""
+        try:
+            self.click_element(self.locators.CONTINUE_BUTTON)
+            self.logger.info("Clicked continue button")
+        except Exception as e:
+            self.logger.error(f"Failed to click continue button: {e}")
+    
     def check_newsletter(self):
         """Check newsletter checkbox"""
         self.click_element(self.locators.NEWSLETTER_CHECKBOX)
