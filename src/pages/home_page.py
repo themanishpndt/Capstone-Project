@@ -6,6 +6,7 @@ from src.pages.base_page import BasePage
 from src.locators.home_locators import HomeLocators
 from src.locators.subscription_locators import SubscriptionLocators
 from src.locators.common_locators import CommonLocators
+from src.locators.login_locators import LoginLocators
 
 
 class HomePage(BasePage):
@@ -16,6 +17,7 @@ class HomePage(BasePage):
         self.home_locators = HomeLocators()
         self.subscription_locators = SubscriptionLocators()
         self.common_locators = CommonLocators()
+        self.login_locators = LoginLocators()
     
     def navigate_to_home(self):
         """Navigate to home page"""
@@ -58,6 +60,11 @@ class HomePage(BasePage):
         """Click logout link"""
         self.click_element(self.home_locators.LOGOUT_LINK)
         self.logger.info("Clicked logout link")
+    
+    def click_delete_account(self):
+        """Click delete account link"""
+        self.click_element(self.login_locators.DELETE_ACCOUNT_BUTTON)
+        self.logger.info("Clicked delete account button")
     
     def subscribe_email_home(self, email):
         """Subscribe using email in home page section"""
