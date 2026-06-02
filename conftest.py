@@ -47,7 +47,7 @@ def pytest_addoption(parser):
     """Add custom command line options"""
     parser.addoption(
         "--browser", action="store", default=os.getenv("BROWSER", "chrome"),
-        help="Browser to run tests on: chrome, firefox, or edge"
+        help="Browser to run tests on: chrome, brave, firefox, or edge"
     )
     parser.addoption(
         "--headless", action="store_true", default=False,
@@ -83,6 +83,38 @@ def driver(request):
     
     if browser == "chrome":
         options = ChromeOptions()
+        options.page_load_strategy = os.getenv("PAGE_LOAD_STRATEGY", "eager")
+        options.add_argument("--start-maximized")
+        options.add_argument("--disable-notifications")
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-dev-shm-usage")
+        options.add_argument("--disable-gpu")
+        options.add_argument("--disable-extensions")
+        options.add_argument("--disable-popup-blocking")
+        options.add_argument("--window-size=1920,1080")
+        options.add_experimental_option(
+            "prefs",
+            {
+                "download.default_directory": download_dir,
+                "download.prompt_for_download": False,
+                "download.directory_upgrade": True,
+                "safebrowsing.enabled": True,
+            },
+        )
+        
+        if headless:
+            options.add_argument("--headless=new")
+        
+        driver_instance = webdriver.Chrome(
+            options=options
+        )
+    
+    elif browser == "brave":
+        # Brave browser configuration (uses Chromium-based options)
+        options = ChromeOptions()
+        # Set Brave executable path
+        brave_path = os.getenv("BRAVE_PATH", "C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe")
+        options.binary_location = brave_path
         options.page_load_strategy = os.getenv("PAGE_LOAD_STRATEGY", "eager")
         options.add_argument("--start-maximized")
         options.add_argument("--disable-notifications")

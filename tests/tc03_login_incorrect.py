@@ -26,34 +26,34 @@ class TestLoginIncorrectCredentialsTC03:
     def test_login_with_incorrect_credentials(self, driver, base_url, action_delay, test_data):
         """Test login with invalid email and password"""
         
-        logger.info("Navigating to home page")
+        logger.info("Step 1: Navigating to home page")
         home_page = HomePage(driver)
         home_page.navigate_to_home()
         action_delay(1)
         
-        logger.info("Clicking on Signup/Login link")
+        logger.info("Step 2: Clicking Signup/Login")
         home_page.click_signup_login()
         action_delay(2)
+        driver.execute_script("window.scrollTo(0, 0);")
+        action_delay(0.5)
         
-        logger.info("Navigating to login page")
+        logger.info("Step 3: Navigating to login")
         login_page = LoginPage(driver)
         login_page.navigate_to_login()
         action_delay(1)
         
-        logger.info("Entering incorrect email and password")
+        logger.info("Step 4: Entering incorrect credentials")
         login_page.enter_email(test_data["invalid_email"])
         action_delay(0.5)
         login_page.enter_password(test_data["invalid_password"])
         action_delay(1)
         
-        logger.info("Clicking login button")
+        logger.info("Step 5: Clicking login button")
         login_page.click_login_button()
         action_delay(2)
         
-        logger.info("Verifying error message is displayed")
+        logger.info("Step 6: Verifying error message")
         error_message = login_page.get_error_message()
-        assert error_message and len(error_message) > 0, \
-            "Expected error message not found"
-        
-        logger.info(f"Error message displayed: {error_message}")
-        logger.info("Login error handling test completed successfully")
+        assert error_message and len(error_message) > 0
+        logger.info(f"Error message: {error_message}")
+        logger.info("Login error test completed successfully")

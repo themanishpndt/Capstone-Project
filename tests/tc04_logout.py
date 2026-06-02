@@ -32,12 +32,15 @@ class TestLogoutUserTC04:
         home_page = HomePage(driver)
         login_page = LoginPage(driver)
         
-        # Step 1-3: Create account with unique email
-        logger.info("Step 1-2: Navigating to home and clicking Signup/Login")
+        logger.info("Step 1: Navigating to home")
         home_page.navigate_to_home()
         action_delay(1)
+        
+        logger.info("Step 2: Clicking Signup/Login")
         home_page.click_signup_login()
         action_delay(2)
+        driver.execute_script("window.scrollTo(0, 0);")
+        action_delay(0.5)
         
         logger.info("Step 3: Registering new account")
         test_email = f"testuser_{int(__import__('time').time())}@example.com"
@@ -50,10 +53,11 @@ class TestLogoutUserTC04:
         login_page.click_signup_button()
         action_delay(2)
         
-        # Step 4: Fill account info and create account
-        logger.info("Step 4: Filling account information and creating account")
-        assert login_page.is_account_info_visible(), "Account info section not visible"
+        logger.info("Step 4: Filling account information")
+        assert login_page.is_account_info_visible()
         action_delay(1)
+        driver.execute_script("window.scrollTo(0, 0);")
+        action_delay(0.5)
         
         login_page.select_title_mr()
         action_delay(0.5)
@@ -68,7 +72,8 @@ class TestLogoutUserTC04:
         login_page.check_special_offers()
         action_delay(1)
         
-        # Fill address info
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight * 0.5);")
+        action_delay(0.5)
         login_page.enter_first_name("Test")
         action_delay(0.5)
         login_page.enter_last_name("User")
@@ -90,31 +95,25 @@ class TestLogoutUserTC04:
         login_page.enter_mobile_number("1234567890")
         action_delay(1)
         
-        logger.info("Creating account")
+        logger.info("Step 5: Creating account")
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        action_delay(0.5)
         login_page.click_create_account()
         action_delay(2)
-        
-        assert login_page.is_account_created_visible(), "Account not created"
+        assert login_page.is_account_created_visible()
         action_delay(1)
         
-        # Step 5: Login (should still be logged in, but let's click continue)
-        logger.info("Step 5: Clicking Continue button")
+        logger.info("Step 6: Clicking continue")
         login_page.click_continue()
         action_delay(2)
-        
-        logger.info("Verifying login success")
         is_success = login_page.is_logged_in_visible()
-        assert is_success, "User not logged in after account creation"
+        assert is_success
         action_delay(1)
         
-        # Step 6: Logout
-        logger.info("Step 6: Clicking logout button")
+        logger.info("Step 7: Clicking logout")
         home_page.click_logout()
         action_delay(2)
         
-        # Step 7: Verify logout was successful
-        logger.info("Step 7: Verifying logout was successful by checking login button is visible")
-        assert login_page.is_login_button_displayed(), \
-            "User not logged out properly - login button not displayed"
-        
+        logger.info("Step 8: Verifying logout was successful")
+        assert login_page.is_login_button_displayed()
         logger.info("Logout test completed successfully")

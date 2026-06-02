@@ -25,27 +25,20 @@ class TestLoginCorrectCredentialsTC02:
     @pytest.mark.smoke
     @pytest.mark.critical
     def test_login_with_correct_credentials(self, driver, base_url, action_delay, test_data):
-        """Test login with valid email and password
-        
-        Steps:
-        1. Navigate to home page
-        2. Click Signup/Login
-        3. Register new account with test credentials
-        4. Verify account created
-        5. Logout
-        6. Login with same credentials
-        7. Verify logged in message
-        """
+        """Test login with valid email and password"""
         
         home_page = HomePage(driver)
         login_page = LoginPage(driver)
         
-        # Step 1-3: Navigate and sign up with test credentials (use unique email)
-        logger.info("Step 1-2: Navigating to home and clicking Signup/Login")
+        logger.info("Step 1: Navigating to home")
         home_page.navigate_to_home()
         action_delay(1)
+        
+        logger.info("Step 2: Clicking Signup/Login")
         home_page.click_signup_login()
         action_delay(2)
+        driver.execute_script("window.scrollTo(0, 0);")
+        action_delay(0.5)
         
         logger.info("Step 3: Registering new account")
         test_email = f"testuser_{int(__import__('time').time())}@example.com"
@@ -58,10 +51,11 @@ class TestLoginCorrectCredentialsTC02:
         login_page.click_signup_button()
         action_delay(2)
         
-        # Step 4: Fill account info and create account
-        logger.info("Step 4: Filling account information and creating account")
-        assert login_page.is_account_info_visible(), "Account info section not visible"
+        logger.info("Step 4: Filling account information")
+        assert login_page.is_account_info_visible()
         action_delay(1)
+        driver.execute_script("window.scrollTo(0, 0);")
+        action_delay(0.5)
         
         login_page.select_title_mr()
         action_delay(0.5)
@@ -76,7 +70,8 @@ class TestLoginCorrectCredentialsTC02:
         login_page.check_special_offers()
         action_delay(1)
         
-        # Fill address info
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight * 0.5);")
+        action_delay(0.5)
         login_page.enter_first_name("Test")
         action_delay(0.5)
         login_page.enter_last_name("User")
@@ -98,41 +93,36 @@ class TestLoginCorrectCredentialsTC02:
         login_page.enter_mobile_number("1234567890")
         action_delay(1)
         
-        logger.info("Creating account")
+        logger.info("Step 5: Creating account")
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        action_delay(0.5)
         login_page.click_create_account()
         action_delay(2)
-        
-        assert login_page.is_account_created_visible(), "Account not created"
+        assert login_page.is_account_created_visible()
         action_delay(1)
         
-        # Step 5: Logout
-        logger.info("Step 5: Clicking Continue and then Logout")
+        logger.info("Step 6: Logging out")
         login_page.click_continue()
         action_delay(2)
-        
-        logger.info("Logging out")
         home_page.click_logout()
         action_delay(2)
         
-        # Step 6-8: Login again with same credentials
-        logger.info("Step 6: Logging in with same credentials")
+        logger.info("Step 7: Logging back in")
         home_page.click_signup_login()
         action_delay(2)
+        driver.execute_script("window.scrollTo(0, 0);")
+        action_delay(0.5)
         
-        logger.info("Entering email and password")
         login_page.navigate_to_login()
         action_delay(1)
         login_page.enter_email(test_email)
         action_delay(0.5)
         login_page.enter_password(test_password)
         action_delay(1)
-        
-        logger.info("Step 7: Clicking login button")
         login_page.click_login_button()
         action_delay(2)
         
         logger.info("Step 8: Verifying login success")
         is_success = login_page.is_logged_in_visible()
-        assert is_success, "Login was not successful - 'Logged in as' message not visible"
-        
+        assert is_success
         logger.info("Login test completed successfully")

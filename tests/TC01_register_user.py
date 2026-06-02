@@ -37,36 +37,34 @@ class TestRegisterUserTC01:
     def test_register_user(self, driver, base_url, action_delay):
         """Test complete user registration workflow"""
         
-        # Steps 1-7: Navigate and enter signup details
-        logger.info("Step 1-2: Navigating to home page")
+        logger.info("Step 1: Navigating to home page")
         home_page = HomePage(driver)
         home_page.navigate_to_home()
         action_delay(1)
         
-        logger.info("Step 4: Clicking on Signup/Login link")
+        logger.info("Step 2: Clicking on Signup/Login link")
         home_page.click_signup_login()
         action_delay(2)
+        driver.execute_script("window.scrollTo(0, 0);")
+        action_delay(0.5)
         
-        logger.info("Step 6: Entering signup information")
+        logger.info("Step 3: Entering signup information")
         login_page = LoginPage(driver)
         signup_email = f"testuser_{int(__import__('time').time())}@example.com"
         login_page.enter_signup_name("Test User")
         action_delay(0.5)
         login_page.enter_signup_email(signup_email)
         action_delay(1)
-        
-        logger.info("Step 7: Clicking Signup button")
         login_page.click_signup_button()
         action_delay(2)
         
-        # Step 8: Verify ENTER ACCOUNT INFORMATION is visible
-        logger.info("Step 8: Verifying ENTER ACCOUNT INFORMATION section")
-        assert login_page.is_account_info_visible(), \
-            "ENTER ACCOUNT INFORMATION section not visible"
+        logger.info("Step 4: Verifying account information section")
+        assert login_page.is_account_info_visible()
         action_delay(1)
         
-        # Steps 9-11: Fill account information
-        logger.info("Step 9: Filling account information")
+        logger.info("Step 5: Filling account details")
+        driver.execute_script("window.scrollTo(0, 0);")
+        action_delay(0.5)
         login_page.select_title_mr()
         action_delay(0.5)
         login_page.enter_reg_name("Test User")
@@ -75,17 +73,14 @@ class TestRegisterUserTC01:
         action_delay(0.5)
         login_page.select_date_of_birth("15", "05", "1990")
         action_delay(1)
-        
-        logger.info("Step 10: Checking newsletter checkbox")
         login_page.check_newsletter()
         action_delay(0.5)
-        
-        logger.info("Step 11: Checking special offers checkbox")
         login_page.check_special_offers()
         action_delay(1)
         
-        # Step 12: Fill address information
-        logger.info("Step 12: Filling address information")
+        logger.info("Step 6: Filling address information")
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight * 0.5);")
+        action_delay(0.5)
         login_page.enter_first_name("Test")
         action_delay(0.3)
         login_page.enter_last_name("User")
@@ -107,37 +102,30 @@ class TestRegisterUserTC01:
         login_page.enter_mobile_number("1234567890")
         action_delay(1)
         
-        # Step 13: Click Create Account button
-        logger.info("Step 13: Clicking Create Account button")
+        logger.info("Step 7: Creating account")
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        action_delay(0.5)
         login_page.click_create_account()
         action_delay(2)
         
-        # Step 14: Verify ACCOUNT CREATED message
-        logger.info("Step 14: Verifying ACCOUNT CREATED message")
-        assert login_page.is_account_created_visible(), \
-            "ACCOUNT CREATED message not visible"
+        logger.info("Step 8: Verifying account created")
+        assert login_page.is_account_created_visible()
         action_delay(1)
         
-        # Step 15: Click Continue button
-        logger.info("Step 15: Clicking Continue button")
+        logger.info("Step 9: Clicking continue")
         login_page.click_continue()
         action_delay(2)
         
-        # Step 16: Verify Logged in as message
-        logger.info("Step 16: Verifying 'Logged in as' message")
-        assert login_page.is_logged_in_visible(), \
-            "'Logged in as' message not visible"
+        logger.info("Step 10: Verifying logged in status")
+        assert login_page.is_logged_in_visible()
         action_delay(1)
         
-        # Step 17: Click Delete Account button
-        logger.info("Step 17: Clicking Delete Account button")
+        logger.info("Step 11: Deleting account")
         login_page.click_delete_account()
         action_delay(2)
         
-        # Step 18: Verify ACCOUNT DELETED message
-        logger.info("Step 18: Verifying ACCOUNT DELETED message")
-        assert login_page.is_account_deleted_visible(), \
-            "ACCOUNT DELETED message not visible"
+        logger.info("Step 12: Verifying account deleted")
+        assert login_page.is_account_deleted_visible()
         action_delay(1)
         
-        logger.info("Complete registration and deletion test passed")
+        logger.info("Registration test completed successfully")
