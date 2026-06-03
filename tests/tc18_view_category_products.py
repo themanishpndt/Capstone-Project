@@ -66,7 +66,7 @@ class TestViewCategoryProductsTC18:
             "Step 6: Click Dress subcategory"
         )
         category_page.click_women_dress_subcategory()
-        action_delay(3)
+        category_page.wait_for_category_title_contains("WOMEN - DRESS PRODUCTS")
 
         title = (
             category_page.get_category_title()
@@ -91,7 +91,7 @@ class TestViewCategoryProductsTC18:
             "Step 8: Click Men Tshirts"
         )
         category_page.click_men_tshirts_subcategory()
-        action_delay(3)
+        category_page.wait_for_category_title_contains("MEN - TSHIRTS PRODUCTS")
 
         title = (
             category_page.get_category_title()

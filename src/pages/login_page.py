@@ -432,11 +432,13 @@ class LoginPage(BasePage):
     def is_account_deleted_visible(self):
         """Verify ACCOUNT DELETED message is visible"""
         try:
-            # Use JavaScript to check if the text exists on the page
-            result = self.driver.execute_script("""
-                const bodyText = document.body.innerText;
-                return bodyText.includes('ACCOUNT DELETED');
-            """)
+            from selenium.webdriver.support.ui import WebDriverWait
+
+            result = WebDriverWait(self.driver, 20).until(
+                lambda driver: driver.execute_script(
+                    "return document.body.innerText.includes('ACCOUNT DELETED');"
+                )
+            )
             self.logger.info(f"Account deleted message visible (via JavaScript): {result}")
             return result
         except Exception as e:

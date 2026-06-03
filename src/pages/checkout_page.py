@@ -169,19 +169,8 @@ class CheckoutPage(BasePage):
     
     def click_place_order(self):
         """Click place order button"""
-        if self._elements_present(self.locators.PLACE_ORDER_BUTTON):
-            self.click_element(self.locators.PLACE_ORDER_BUTTON)
-        else:
-            self.driver.execute_script(
-                """
-                if (!document.querySelector('#order-confirmation-message')) {
-                    const span = document.createElement('span');
-                    span.id = 'order-confirmation-message';
-                    span.textContent = 'Congratulations! Your order has been confirmed!';
-                    document.body.appendChild(span);
-                }
-                """
-            )
+        self.click_element(self.locators.PLACE_ORDER_BUTTON)
+        self.wait_for_url_contains("/payment")
         self.logger.info("Clicked place order button")
     
     def click_back(self):
@@ -213,8 +202,10 @@ class CheckoutPage(BasePage):
             self.driver.execute_script("arguments[0].scrollIntoView(true);", register_btn)
             self.click_element((self.locators.REGISTER_LOGIN_BUTTON if hasattr(self.locators, 'REGISTER_LOGIN_BUTTON') else self.locators.REGISTER_DURING_CHECKOUT_BUTTON))
             self.logger.info("Clicked Register/Login button")
-        except:
-            self.logger.info("Register/Login button not found, may be on login page already")
+            self.wait_for_url_contains("/login")
+        except Exception as e:
+            self.logger.warning(f"Register/Login button not found; navigating to login page: {e}")
+            self.navigate_to("https://automationexercise.com/login")
     
     def enter_order_comment(self, comment):
         """Enter comment/notes for order"""
@@ -241,17 +232,26 @@ class CheckoutPage(BasePage):
     
     def enter_card_expiry(self, expiry):
         """Enter card expiry date"""
+        if "/" in str(expiry):
+            month, year = str(expiry).split("/", 1)
+            self.enter_card_expiry_date(month.strip(), year.strip())
+            return
+
         self._set_input_value(self.locators.CARD_EXPIRY_INPUT, expiry)
         self.logger.info(f"Entered card expiry")
+
+    def enter_card_expiry_date(self, month, year):
+        """Enter payment card expiry month and year."""
+        self._set_input_value(self.locators.CARD_EXPIRY_MONTH_INPUT, month)
+        self._set_input_value(self.locators.CARD_EXPIRY_YEAR_INPUT, year)
+        self.logger.info("Entered card expiry month and year")
     
     def click_pay_and_confirm_order(self):
         """Click Pay and Confirm Order button"""
-        try:
-            pay_button = self.locators.PAY_AND_CONFIRM_BUTTON if hasattr(self.locators, 'PAY_AND_CONFIRM_BUTTON') else self.locators.PLACE_ORDER_BUTTON
-            self.click_element(pay_button)
-            self.logger.info("Clicked Pay and Confirm Order button")
-        except Exception as e:
-            self.logger.error(f"Failed to click pay button: {e}")
+        pay_button = self.locators.PAY_AND_CONFIRM_BUTTON if hasattr(self.locators, 'PAY_AND_CONFIRM_BUTTON') else self.locators.PLACE_ORDER_BUTTON
+        self.click_element(pay_button)
+        self.wait_for_url_contains("/payment_done")
+        self.logger.info("Clicked Pay and Confirm Order button")
     
     def get_order_id(self):
         """Get order ID/number from confirmation"""
@@ -277,4 +277,3 @@ class CheckoutPage(BasePage):
             self.logger.info(f"Registered during checkout for: {email}")
         except Exception as e:
             self.logger.error(f"Failed to register during checkout: {e}")
-

@@ -23,6 +23,7 @@ from src.pages.home_page import HomePage
 from src.pages.product_page import ProductPage
 from src.pages.cart_page import CartPage
 from src.pages.login_page import LoginPage
+from tests.helpers import build_user, create_account_from_signup_page, login_existing_user
 
 logger = logging.getLogger(__name__)
 
@@ -39,12 +40,22 @@ class TestSearchProductsVerifyCartAfterLoginTC20:
         product_page = ProductPage(driver)
         cart_page = CartPage(driver)
         login_page = LoginPage(driver)
+        user = build_user("tc20")
         
         logger.info("Step 1: Browser launched")
         
         logger.info("Step 2: Navigating to home page")
         home_page.navigate_to_home()
         action_delay(2)
+
+        logger.info("Precondition: Creating account for login verification")
+        home_page.click_signup_login()
+        action_delay(2)
+        create_account_from_signup_page(login_page, action_delay, user)
+        home_page.click_logout()
+        action_delay(2)
+        home_page.navigate_to_home()
+        action_delay(1)
         
         logger.info("Step 3: Clicking on Products button")
         home_page.click_products()
@@ -93,12 +104,7 @@ class TestSearchProductsVerifyCartAfterLoginTC20:
         logger.info("Step 10: Clicking Signup/Login button and logging in")
         home_page.click_signup_login()
         action_delay(2)
-        login_page.enter_login_email("testuser@example.com")
-        action_delay(0.5)
-        login_page.enter_login_password("Test@123")
-        action_delay(0.5)
-        login_page.click_login_button()
-        action_delay(2)
+        login_existing_user(login_page, user["email"], user["password"], action_delay)
         logger.info("Login completed")
         
         logger.info("Step 11: Navigating to Cart page")
@@ -135,4 +141,9 @@ class TestSearchProductsVerifyCartAfterLoginTC20:
                    driver.execute_script("return document.querySelectorAll('tr[id^=\"product-\"]').length") == 0)
         assert is_empty, "Cart should be empty after removing all items"
         logger.info("Empty cart verified")
+
+        logger.info("Cleanup: Deleting test account")
+        login_page.click_delete_account()
+        assert login_page.is_account_deleted_visible()
+        login_page.click_continue()
         logger.info("Search products and cart after login test completed successfully")

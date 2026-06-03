@@ -16,16 +16,16 @@ class BrandLocators:
     BRAND_LIST = (By.XPATH, "//div[@class='left-sidebar']//li")
     
     # Brand items - using more flexible selectors
-    POLO_BRAND = (By.XPATH, "//a[contains(text(), 'Polo') or contains(@href, 'polo')]/ancestor::li//a | //li//a[normalize-space()='Polo']")
-    H_M_BRAND = (By.XPATH, "//a[contains(text(), 'H&M') or contains(text(), 'H & M') or contains(@href, 'hm')]/ancestor::li//a | //li//a[contains(normalize-space(), 'H')]")
-    MADAME_BRAND = (By.XPATH, "//a[contains(text(), 'Madame')]/ancestor::li//a | //li//a[normalize-space()='Madame']")
-    MANGO_BRAND = (By.XPATH, "//a[contains(text(), 'Mango')]/ancestor::li//a | //li//a[normalize-space()='Mango']")
-    ALLEN_SOLLY_BRAND = (By.XPATH, "//a[contains(text(), 'Allen')]/ancestor::li//a | //li//a[contains(normalize-space(), 'Allen')]")
-    BABYHUG_BRAND = (By.XPATH, "//a[contains(text(), 'Babyhug')]/ancestor::li//a | //li//a[normalize-space()='Babyhug']")
-    BIBA_BRAND = (By.XPATH, "//a[contains(text(), 'Biba')]/ancestor::li//a | //li//a[normalize-space()='Biba']")
-    AEROPOSTALE_BRAND = (By.XPATH, "//a[contains(text(), 'Aeropostale')]/ancestor::li//a | //li//a[normalize-space()='Aeropostale']")
-    JOHN_MILLER_BRAND = (By.XPATH, "//a[contains(text(), 'John Miller')]/ancestor::li//a | //li//a[contains(normalize-space(), 'John')]")
-    NOVA_BRAND = (By.XPATH, "//a[contains(text(), 'Nova')]/ancestor::li//a | //li//a[normalize-space()='Nova']")
+    POLO_BRAND = (By.XPATH, "//div[contains(@class, 'brands-name')]//a[contains(., 'Polo')]")
+    H_M_BRAND = (By.XPATH, "//div[contains(@class, 'brands-name')]//a[contains(., 'H&M') or contains(., 'H & M')]")
+    MADAME_BRAND = (By.XPATH, "//div[contains(@class, 'brands-name')]//a[contains(., 'Madame')]")
+    MANGO_BRAND = (By.XPATH, "//div[contains(@class, 'brands-name')]//a[contains(., 'Mango')]")
+    ALLEN_SOLLY_BRAND = (By.XPATH, "//div[contains(@class, 'brands-name')]//a[contains(., 'Allen')]")
+    BABYHUG_BRAND = (By.XPATH, "//div[contains(@class, 'brands-name')]//a[contains(., 'Babyhug')]")
+    BIBA_BRAND = (By.XPATH, "//div[contains(@class, 'brands-name')]//a[contains(., 'Biba')]")
+    AEROPOSTALE_BRAND = (By.XPATH, "//div[contains(@class, 'brands-name')]//a[contains(., 'Aeropostale')]")
+    JOHN_MILLER_BRAND = (By.XPATH, "//div[contains(@class, 'brands-name')]//a[contains(., 'John Miller')]")
+    NOVA_BRAND = (By.XPATH, "//div[contains(@class, 'brands-name')]//a[contains(., 'Nova')]")
     
     # Products in brand
     PRODUCT_ITEMS = (By.XPATH, "//div[@class='product-image-wrapper']")

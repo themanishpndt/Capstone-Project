@@ -74,23 +74,7 @@ class TestAddReviewOnProductTC21:
         action_delay(1)
         
         logger.info("Step 8: Clicking Submit button")
-        # Use JavaScript to click submit since form submission might need extra handling
-        driver.execute_script("""
-            let submitBtn = document.querySelector('#button-review') || 
-                           document.querySelector('input[value=\"Submit\"]') ||
-                           document.querySelector('button:contains(\"Submit\")');
-            if(submitBtn) submitBtn.click();
-            else {
-                // Try finding by text content
-                let buttons = document.querySelectorAll('input[type=\"button\"], button');
-                for(let btn of buttons) {
-                    if(btn.value.includes('Submit') || btn.textContent.includes('Submit')) {
-                        btn.click();
-                        break;
-                    }
-                }
-            }
-        """)
+        review_page.click_submit_review()
         action_delay(3)  # Wait for server response
         
         logger.info("Step 9: Verifying success message 'Thank you for your review.'")

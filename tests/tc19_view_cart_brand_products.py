@@ -14,7 +14,6 @@ Workflow: Navigate to Products → Verify brands sidebar → Click first brand �
 import pytest
 import logging
 from src.pages.home_page import HomePage
-from src.pages.product_page import ProductPage
 from src.pages.brand_page import BrandPage
 
 logger = logging.getLogger(__name__)
@@ -29,7 +28,6 @@ class TestViewCartBrandProductsTC19:
         """Test brand filtering and product display"""
         
         home_page = HomePage(driver)
-        product_page = ProductPage(driver)
         brand_page = BrandPage(driver)
         
         logger.info("Step 1: Browser launched")
@@ -43,50 +41,32 @@ class TestViewCartBrandProductsTC19:
         action_delay(2)
         
         logger.info("Step 4: Verifying Brands are visible on left sidebar")
-        page_text = driver.execute_script("return document.body.innerText;")
-        assert "BRANDS" in page_text or "brand" in page_text.lower()
+        assert brand_page.is_element_visible(brand_page.locators.BRANDS_SIDEBAR)
         logger.info("Brands verified on left sidebar")
         action_delay(1)
         
         logger.info("Step 5: Clicking on first brand (Polo)")
-        # Use JavaScript to find and click brand
-        driver.execute_script("""
-            let brands = document.querySelectorAll('.left-sidebar a');
-            for(let brand of brands) {
-                if(brand.textContent.includes('Polo')) {
-                    brand.click();
-                    break;
-                }
-            }
-        """)
+        brand_page.click_polo_brand()
+        brand_page.wait_for_url_contains("/brand_products/")
         action_delay(2)
         
         logger.info("Step 6: Verifying user is navigated to brand page and products are displayed")
         current_url = driver.current_url
-        page_text = driver.execute_script("return document.body.innerText;")
         assert "polo" in current_url.lower() or "brand" in current_url.lower()
-        product_count = product_page.get_product_count()
+        product_count = brand_page.get_product_count()
         assert product_count > 0
         logger.info(f"Brand page verified with {product_count} products")
         action_delay(1)
         
         logger.info("Step 7: Clicking on another brand (H&M)")
-        # Use JavaScript to find and click brand
-        driver.execute_script("""
-            let brands = document.querySelectorAll('.left-sidebar a');
-            for(let brand of brands) {
-                if(brand.textContent.includes('H&M') || brand.textContent.includes('H & M')) {
-                    brand.click();
-                    break;
-                }
-            }
-        """)
+        brand_page.click_h_m_brand()
+        brand_page.wait_for_url_contains("/brand_products/")
         action_delay(2)
         
         logger.info("Step 8: Verifying user is navigated to that brand page and products are displayed")
         current_url = driver.current_url
         assert "h&m" in current_url.lower() or "brand" in current_url.lower() or "hm" in current_url.lower()
-        product_count = product_page.get_product_count()
+        product_count = brand_page.get_product_count()
         assert product_count > 0
         logger.info(f"Second brand page verified with {product_count} products")
         logger.info("View and cart brand products test completed successfully")

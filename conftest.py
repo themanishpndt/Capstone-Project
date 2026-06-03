@@ -36,7 +36,7 @@ logging.basicConfig(
     level=logging.INFO,
     format=logging_format,
     handlers=[
-        logging.FileHandler('reports/logs/test.log'),
+        logging.FileHandler('reports/logs/test.log', encoding='utf-8'),
         logging.StreamHandler()
     ]
 )

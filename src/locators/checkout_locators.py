@@ -21,8 +21,8 @@ class CheckoutLocators:
     COUNTRY_INPUT = (By.NAME, "country")
     
     # Billing and Delivery sections
-    BILLING_ADDRESS_SECTION = (By.XPATH, "//h4[contains(text(), 'Billing Address')]")
-    DELIVERY_ADDRESS_SECTION = (By.XPATH, "//h4[contains(text(), 'Delivery Address')]")
+    BILLING_ADDRESS_SECTION = (By.ID, "address_invoice")
+    DELIVERY_ADDRESS_SECTION = (By.ID, "address_delivery")
     
     # Billing address
     SAME_AS_SHIPPING_CHECKBOX = (By.ID, "same-as-shipping")
@@ -36,27 +36,34 @@ class CheckoutLocators:
     
     # Credit card details
     CARD_NUMBER_INPUT = (By.NAME, "card_number")
-    CARD_EXPIRY_INPUT = (By.NAME, "card_expiry")
-    CARD_CVC_INPUT = (By.NAME, "card_cvc")
-    CARD_NAME_INPUT = (By.NAME, "card_name")
+    CARD_EXPIRY_MONTH_INPUT = (By.NAME, "expiry_month")
+    CARD_EXPIRY_YEAR_INPUT = (By.NAME, "expiry_year")
+    CARD_EXPIRY_INPUT = (By.XPATH, "//input[@name='card_expiry' or @name='expiry']")
+    CARD_CVC_INPUT = (By.NAME, "cvc")
+    CARD_NAME_INPUT = (By.NAME, "name_on_card")
     
     # Order summary
     ORDER_TOTAL = (By.XPATH, "//h4/strong[contains(text(), 'Total')]")
-    ORDER_ITEMS = (By.XPATH, "//tr[@class='active']")
+    ORDER_ITEMS = (By.XPATH, "//tr[starts-with(@id, 'product-')]")
     
     # Order comment
-    ORDER_COMMENT_TEXTAREA = (By.NAME, "order_comment")
-    ORDER_COMMENT = (By.XPATH, "//textarea[@name='order_comment' or @id='order_comment']")
+    ORDER_COMMENT_TEXTAREA = (By.XPATH, "//textarea[@name='message' or @name='order_comment' or @id='order_comment']")
+    ORDER_COMMENT = ORDER_COMMENT_TEXTAREA
     
     # Buttons
-    PLACE_ORDER_BUTTON = (By.XPATH, "//button[contains(text(), 'Place Order')]")
+    PLACE_ORDER_BUTTON = (By.XPATH, "//a[contains(text(), 'Place Order')] | //button[contains(text(), 'Place Order')]")
     BACK_BUTTON = (By.XPATH, "//button[contains(text(), 'Back')]")
     DOWNLOAD_INVOICE_BUTTON = (By.XPATH, "//a[contains(text(), 'Download Invoice')]")
-    REGISTER_LOGIN_BUTTON = (By.XPATH, "//a[contains(text(), 'Register') or contains(text(), 'Login') or contains(text(), 'Signup')]")
-    PAY_AND_CONFIRM_BUTTON = (By.XPATH, "//button[contains(text(), 'Pay') or contains(text(), 'Confirm')] | //input[@value='Pay and Confirm Order']")
+    REGISTER_LOGIN_BUTTON = (
+        By.XPATH,
+        "//div[contains(@class, 'modal')]//a[contains(., 'Register') or contains(., 'Login')]"
+        " | //a[contains(., 'Register / Login')]"
+        " | //a[contains(text(), 'Signup / Login')]"
+    )
+    PAY_AND_CONFIRM_BUTTON = (By.XPATH, "//button[@data-qa='pay-button' or @id='submit' or contains(text(), 'Pay') or contains(text(), 'Confirm')] | //input[@value='Pay and Confirm Order']")
     
     # Confirmation
-    ORDER_CONFIRMATION_MESSAGE = (By.XPATH, "//span[contains(text(), 'Congratulations')] | //h2[contains(text(), 'Congratulations')]")
+    ORDER_CONFIRMATION_MESSAGE = (By.XPATH, "//*[contains(text(), 'Congratulations') or contains(text(), 'order has been confirmed')]")
     ORDER_NUMBER = (By.XPATH, "//span[@class='order-id']")
     
     # Registration during checkout

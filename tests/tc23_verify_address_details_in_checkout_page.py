@@ -24,6 +24,7 @@ from src.pages.login_page import LoginPage
 from src.pages.product_page import ProductPage
 from src.pages.cart_page import CartPage
 from src.pages.checkout_page import CheckoutPage
+from tests.helpers import build_user, create_account_from_signup_page
 
 logger = logging.getLogger(__name__)
 
@@ -41,6 +42,7 @@ class TestVerifyAddressDetailsInCheckoutPageTC23:
         product_page = ProductPage(driver)
         cart_page = CartPage(driver)
         checkout_page = CheckoutPage(driver)
+        user_address = build_user("tc23")
         
         logger.info("Step 1: Browser launched")
         
@@ -52,21 +54,11 @@ class TestVerifyAddressDetailsInCheckoutPageTC23:
         logger.info("Home page verified")
         action_delay(1)
         
-        logger.info("Step 4-7: Login with existing account")
-        # Use existing account to avoid form element click interception issues
+        logger.info("Step 4-7: Registering account with address details")
         home_page.click_signup_login()
         action_delay(2)
-        login_page.enter_email("testuser@example.com")
-        action_delay(0.5)
-        login_page.enter_password("Test@123")
-        action_delay(0.5)
-        login_page.click_login_button()
-        action_delay(3)
-        
-        # Verify login
-        page_text = driver.execute_script("return document.body.innerText;")
-        assert "logged in" in page_text.lower() or "testuser" in page_text.lower()
-        logger.info("Login verified")
+        create_account_from_signup_page(login_page, action_delay, user_address)
+        logger.info("Account registration and login verified")
         action_delay(1)
         
         logger.info("Step 8: Adding products to cart")
@@ -91,22 +83,36 @@ class TestVerifyAddressDetailsInCheckoutPageTC23:
         cart_page.click_proceed_to_checkout()
         action_delay(2)
         
-        logger.info("Step 12: Verifying delivery and billing addresses are displayed on checkout page")
-        # Verify checkout page is displayed with address information
-        page_text = driver.execute_script("return document.body.innerText;")
-        assert "order" in page_text.lower() or "proceed" in page_text.lower() or "checkout" in page_text.lower()
-        logger.info("Checkout page verified with address information")
+        logger.info("Step 12: Verifying delivery and billing addresses match registration")
+        delivery_address = checkout_page.get_delivery_address()
+        billing_address = checkout_page.get_billing_address()
+        expected_address_parts = [
+            user_address["name"],
+            user_address["company"],
+            user_address["address1"],
+            user_address["address2"],
+            user_address["city"],
+            user_address["state"],
+            user_address["zipcode"],
+            user_address["country"],
+            user_address["mobile"],
+        ]
+
+        assert delivery_address, "Delivery address section was not found"
+        assert billing_address, "Billing address section was not found"
+        for expected_text in expected_address_parts:
+            assert expected_text in delivery_address, f"Missing delivery address text: {expected_text}"
+            assert expected_text in billing_address, f"Missing billing address text: {expected_text}"
+
+        logger.info("Delivery and billing addresses match registration details")
         action_delay(1)
         
-        logger.info("Step 13-14: Returning to home and deleting account")
-        home_page.navigate_to_home()
-        action_delay(1)
-        home_page.click_delete_account()
+        logger.info("Step 13-14: Deleting account")
+        login_page.click_delete_account()
         action_delay(2)
         
-        page_text = driver.execute_script("return document.body.innerText;")
-        assert "ACCOUNT DELETED" in page_text
-        login_page.click_continue_button()
+        assert login_page.is_account_deleted_visible()
+        login_page.click_continue()
         action_delay(2)
         logger.info("Account deletion verified")
         logger.info("Verify address details in checkout page test completed successfully")

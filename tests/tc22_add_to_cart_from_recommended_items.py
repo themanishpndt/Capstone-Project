@@ -48,44 +48,11 @@ class TestAddToCartFromRecommendedItemsTC22:
         action_delay(1)
         
         logger.info("Step 5: Clicking on 'Add To Cart' on Recommended product")
-        # Find and click the first recommended item's add to cart button
-        recommended_add_buttons = driver.execute_script(
-            """
-            let buttons = [];
-            let elements = document.querySelectorAll('[class*="recommended"], [id*="recommended"]');
-            elements.forEach(el => {
-                let addBtn = el.querySelector('a[data-product-id], button[class*="cart"], a[class*="cart"]');
-                if(addBtn) buttons.push(addBtn);
-            });
-            return buttons.length;
-            """
-        )
-        
-        if recommended_add_buttons > 0:
-            driver.execute_script(
-                """
-                let elements = document.querySelectorAll('[class*="recommended"], [id*="recommended"]');
-                elements.forEach(el => {
-                    let addBtn = el.querySelector('a[data-product-id], button[class*="cart"], a[class*="cart"]');
-                    if(addBtn) addBtn.click();
-                });
-                """
-            )
-            logger.info("Clicked Add To Cart on recommended product")
+        home_page.add_first_recommended_product_to_cart()
         action_delay(2)
-        
-        # Handle modal if it appears
-        try:
-            modal_button = driver.find_element(*cart_page.locators.CART_MODAL_VIEW_CART_LINK) if hasattr(cart_page, 'locators') else None
-            if modal_button:
-                modal_button.click()
-                action_delay(1)
-        except:
-            pass
         
         logger.info("Step 6: Clicking on 'View Cart' button")
-        home_page.click_cart()
-        action_delay(2)
+        assert "cart" in driver.current_url.lower()
         
         logger.info("Step 7: Verifying that product is displayed in cart page")
         cart_items = cart_page.get_cart_items_count()
