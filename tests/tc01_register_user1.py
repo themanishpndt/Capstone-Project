@@ -129,4 +129,3 @@ class TestRegisterUserTC01:
         action_delay(1)
         
         logger.info("Registration test completed successfully")
-
